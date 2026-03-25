@@ -10,11 +10,20 @@ Unofficial Bitwarden server implementation for your homelab.
 openssl rand -base64 48
 ```
 
-### 2. Update docker-compose.yml
+### 2. Create Environment File
 
-- Set `DOMAIN` to your actual domain
-- Set `ADMIN_TOKEN` to the token generated above
-- Set `SIGNUPS_ALLOWED` to `true` (set to `false` after creating your account)
+```bash
+# Copy the example
+cp .env.example .env
+
+# Edit .env with your values
+nano .env
+```
+
+Update these required values:
+- `DOMAIN` - Your public-facing domain
+- `ADMIN_TOKEN` - The token generated above
+- `SIGNUPS_ALLOWED` - Set to `true` initially, then `false` after creating your account
 
 ### 3. Deploy
 
