@@ -37,25 +37,16 @@ http://your-lxc-ip:80/admin
 
 ## 🔧 Reverse Proxy (Recommended)
 
-For production use, use a reverse proxy with HTTPS:
+For production use, use a reverse proxy with HTTPS.
 
-### Traefik (Recommended)
+### Pangolin (Your Setup)
 
-Add to your compose file or create a separate Traefik service.
+Configure Vaultwarden in Pangolin with:
+- **Domain**: `vaultwarden.yourdomain.com` (or your preferred subdomain)
+- **Port**: `80` (or `3012` for WebSocket-only)
+- **WebSocket support**: Enable (required for real-time sync)
 
-Labels for Vaultwarden:
-```yaml
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.vaultwarden.rule=Host(`vaultwarden.yourdomain.com`)"
-      - "traefik.http.routers.vaultwarden.entrypoints=websecure"
-      - "traefik.http.routers.vaultwarden.tls.certresolver=myresolver"
-      - "traefik.http.services.vaultwarden.loadbalancer.server.port=80"
-```
-
-### Nginx Proxy Manager
-
-Easy web-based reverse proxy management.
+**Important for WebSocket**: Ensure your reverse proxy supports WebSocket upgrades on the `/notifications/hub` endpoint.
 
 ## 🔐 Security Checklist
 
