@@ -1,0 +1,40 @@
+# Environment files
+.env
+*.env
+.env.local
+.env.*.local
+
+# Secrets
+*.key
+*.pem
+*.crt
+secrets/
+credentials/
+
+# Logs
+*.log
+logs/
+
+# Data directories
+data/
+volumes/
+backups/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+.docker/
+
+# Ansible
+*.retry
+ansible/roles/
+ansible/.cache/
