@@ -10,6 +10,11 @@
 *.crt
 secrets/
 credentials/
+**/.config
+
+# Script logs
+**/review.log
+**/*.log
 
 # Logs
 *.log
