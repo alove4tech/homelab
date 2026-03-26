@@ -15,10 +15,19 @@ homelab/
 
 ## 🐳 Docker Services
 
+### In This Repository
+
 Each service in `docker/services/` includes:
 - `docker-compose.yml` - Service configuration
 - `README.md` - Setup and usage notes
 - `.env.example` - Environment variable template
+
+### Separate Repositories
+
+Some applications have their own repositories for better separation:
+
+- **[Security+ Study Hub](https://github.com/alove4tech/secplus-study)** - Next.js app for CompTIA Security+ exam prep
+- *(more to be added)*
 
 ### Quick Start
 
