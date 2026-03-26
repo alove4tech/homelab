@@ -6,7 +6,7 @@
 set -e
 
 REPO_DIR="/home/claw/.openclaw/workspace/homelab"
-LOG_FILE="/home/claw/.openclaw/workspace/homelab/.scripts/review.log"
+LOG_FILE="/home/claw/.openclaw/logs/homelab-review.log"
 CONFIG_FILE="/home/claw/.openclaw/workspace/homelab/.scripts/.config"
 
 # Load GitHub token from config file
