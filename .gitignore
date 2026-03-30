@@ -46,3 +46,6 @@ ansible/.cache/
 .scripts/*.log
 .scripts/review.log
 *.env
+
+# Scripts config (moved to centralized automation)
+.scripts/

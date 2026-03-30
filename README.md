@@ -1,62 +1,34 @@
-# 🏠 Homelab
+# Homelab
 
-My homelab infrastructure and services.
+Infrastructure and services for my home network.
 
-## 📁 Structure
+## Layout
 
 ```
 homelab/
-├── docker/              # Docker Compose services
-│   └── services/         # Individual service configs
-├── ansible/             # Ansible playbooks (future)
-├── docs/                # Documentation
-└── README.md
+├── docker/services/    # Docker Compose configs per service
+├── ansible/            # Playbooks (eventually)
+└── docs/               # Notes and documentation
 ```
 
-## 🐳 Docker Services
+## Services
 
-### In This Repository
+Each service lives in `docker/services/<name>/` with its own docker-compose.yml, .env.example, and README.
 
-Each service in `docker/services/` includes:
-- `docker-compose.yml` - Service configuration
-- `README.md` - Setup and usage notes
-- `.env.example` - Environment variable template
+### Separate repos
 
-### Separate Repositories
+- [Security+ Study Hub](https://github.com/alove4tech/secplus-study) — exam prep app
 
-Some applications have their own repositories for better separation:
-
-- **[Security+ Study Hub](https://github.com/alove4tech/secplus-study)** - Next.js app for CompTIA Security+ exam prep
-- *(more to be added)*
-
-### Quick Start
+### Quick start
 
 ```bash
-# Clone repo
 git clone https://github.com/alove4tech/homelab.git
-cd homelab
-
-# Deploy a service
-cd docker/services/<service-name>
+cd homelab/docker/services/<service>
+cp .env.example .env
+# edit .env
 docker compose up -d
 ```
 
-## 🏗️ Infrastructure
+## Hardware
 
-- **Proxmox**: N100 mini PC
-- **Docker**: Running in LXC container
-
-## 🔧 Adding a New Service
-
-1. Create directory: `docker/services/<service-name>/`
-2. Add `docker-compose.yml`
-3. Add `README.md` with setup instructions
-4. Add `.env.example` for secrets
-5. Test deployment
-6. Commit and push
-
-## 📝 Notes
-
-- All sensitive data should use environment variables
-- Never commit actual secrets to the repo
-- Use `.env` files locally (add to `.gitignore`)
+N100 mini PC. Compose configs are tuned for low resources (512MB RAM, 1 CPU per service).
