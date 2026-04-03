@@ -6,9 +6,10 @@ Infrastructure and services for my home network.
 
 ```
 homelab/
-├── docker/services/    # Docker Compose configs per service
-├── ansible/            # Playbooks (eventually)
-└── docs/               # Notes and documentation
+├── docker/
+│   ├── README.md       # Docker service notes and usage
+│   └── services/       # Docker Compose configs per service
+└── README.md
 ```
 
 ## Services
@@ -32,3 +33,9 @@ docker compose up -d
 ## Hardware
 
 N100 mini PC. Compose configs are tuned for low resources (512MB RAM, 1 CPU per service).
+
+## Roadmap
+
+- Add more service definitions under `docker/services/`
+- Add `docs/` when there is enough material to justify a dedicated documentation tree
+- Add `ansible/` when configuration management is in active use
