@@ -12,6 +12,10 @@ docker/services/<service-name>/
 └── .env.example
 ```
 
+## Current services
+
+- `vaultwarden` - password manager with persistent volume storage and health checks
+
 ## 🚀 Deployment
 
 ### Single Service
@@ -64,3 +68,8 @@ Services are configured with resource limits for the N100 mini PC:
 - Read-only filesystems when applicable
 - Network isolation via dedicated Docker networks
 - No privileged containers
+
+
+## Restore notes
+
+Every service README should eventually include both backup and restore steps. Backups are only half the job if recovery steps are missing when something breaks.
