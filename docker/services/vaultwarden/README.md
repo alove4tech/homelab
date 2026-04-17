@@ -39,11 +39,33 @@ Using Pangolin — point it at port 80. Enable WebSocket support for the `/notif
 ## Backups
 
 ```bash
+mkdir -p backups
+
 docker run --rm \
   -v vaultwarden-data:/data:ro \
   -v $(pwd)/backups:/backup \
   alpine tar czf /backup/vaultwarden-backup-$(date +%Y%m%d).tar.gz -C /data .
 ```
+
+## Restore
+
+Stop the stack before restoring so the database is not being written to mid-restore.
+
+```bash
+docker compose down
+mkdir -p restore
+
+tar xzf backups/vaultwarden-backup-YYYYMMDD.tar.gz -C restore
+
+docker run --rm \
+  -v vaultwarden-data:/data \
+  -v $(pwd)/restore:/restore:ro \
+  alpine sh -c 'rm -rf /data/* && cp -a /restore/. /data/'
+
+docker compose up -d
+```
+
+After the container is healthy again, sign in and confirm logins, attachments, and admin access all look normal.
 
 ## Useful commands
 
