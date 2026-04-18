@@ -76,6 +76,16 @@ docker compose pull && docker compose up -d
 docker exec -it vaultwarden sqlite3 /data/db.sqlite3
 ```
 
+## Quick backup
+
+A backup script is included:
+
+```bash
+chmod +x backup.sh
+./backup.sh
+# or specify a directory: ./backup.sh /path/to/backups
+```
+
 ## Resources
 
 - [Vaultwarden on GitHub](https://github.com/dani-garcia/vaultwarden)
