@@ -1,0 +1,54 @@
+services:
+  gitea:
+    image: gitea/gitea:latest
+    container_name: gitea
+    restart: unless-stopped
+
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          memory: 128M
+
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - GITEA__server__ROOT_URL=http://192.168.69.16:3000/
+      - GITEA__server__SSH_DOMAIN=192.168.69.16
+      - GITEA__server__SSH_PORT=2222
+      - GITEA__server__SSH_LISTEN_PORT=2222
+    # Uncomment to use env_file instead
+    # env_file:
+    #   - .env
+
+    volumes:
+      - gitea-data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+    ports:
+      - "3000:3000"   # Web UI
+      - "2222:2222"   # SSH
+
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+    networks:
+      - gitea-net
+
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  gitea-data:
+    driver: local
+
+networks:
+  gitea-net:
+    driver: bridge
