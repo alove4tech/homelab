@@ -86,6 +86,17 @@ chmod +x backup.sh
 # or specify a directory: ./backup.sh /path/to/backups
 ```
 
+## Quick restore
+
+A restore script is also included:
+
+```bash
+chmod +x restore.sh
+./restore.sh backups/vaultwarden-backup-YYYYMMDD-HHMMSS.tar.gz
+```
+
+It stops the container, restores data, and starts it back up.
+
 ## Resources
 
 - [Vaultwarden on GitHub](https://github.com/dani-garcia/vaultwarden)
