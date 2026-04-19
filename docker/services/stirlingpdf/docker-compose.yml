@@ -1,0 +1,56 @@
+services:
+  stirlingpdf:
+    image: frooodle/s-pdf:latest
+    container_name: stirlingpdf
+    restart: unless-stopped
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 1G
+        reservations:
+          memory: 256M
+
+    environment:
+      - DOCKER_ENABLE_SECURITY=false
+      - SECURITY_ENABLE_LOGIN=false
+      - SYSTEM_MAXFILESIZE=100
+      - UI_APPNAME=Stirling PDF
+    # Uncomment below and set DOCKER_ENABLE_SECURITY=true for auth
+    # env_file:
+    #   - .env
+
+    volumes:
+      - stirlingpdf-data:/usr/share/tessdata
+      - stirlingpdf-config:/configs
+
+    ports:
+      - "8480:8080"
+
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/api/v1/info/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+    networks:
+      - stirlingpdf-net
+
+    # Security hardening
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp
+
+volumes:
+  stirlingpdf-data:
+    driver: local
+  stirlingpdf-config:
+    driver: local
+
+networks:
+  stirlingpdf-net:
+    driver: bridge
