@@ -18,6 +18,8 @@ Each service lives in `docker/services/<name>/` with its own docker-compose.yml,
 
 | Service | Purpose | Path |
 |---|---|---|
+| Gitea | Lightweight self-hosted Git service | `docker/services/gitea/` |
+| Stirling PDF | PDF processing (merge, split, OCR, convert) | `docker/services/stirlingpdf/` |
 | Vaultwarden | Self-hosted Bitwarden-compatible password manager | `docker/services/vaultwarden/` |
 
 ### Separate repos

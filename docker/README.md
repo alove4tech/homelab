@@ -14,7 +14,11 @@ docker/services/<service-name>/
 
 ## Current services
 
-- `vaultwarden` - password manager with persistent volume storage and health checks
+| Service | Purpose | Directory |
+|---------|---------|-----------|
+| Vaultwarden | Self-hosted Bitwarden-compatible password manager | `vaultwarden/` |
+| Gitea | Lightweight self-hosted Git service | `gitea/` |
+| Stirling PDF | Self-hosted PDF processing (merge, split, OCR, convert) | `stirlingpdf/` |
 
 ## 🚀 Deployment
 
