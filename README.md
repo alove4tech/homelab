@@ -22,9 +22,11 @@ Each service lives in `docker/services/<name>/` with its own docker-compose.yml,
 | Stirling PDF | PDF processing (merge, split, OCR, convert) | `docker/services/stirlingpdf/` |
 | Vaultwarden | Self-hosted Bitwarden-compatible password manager | `docker/services/vaultwarden/` |
 
-### Separate repos
+### Related projects
 
+- [Cybersecurity Lab](https://github.com/alove4tech/Cybersecurity-Lab-Project) — SOC + detection lab on Proxmox
 - [Security+ Study Hub](https://github.com/alove4tech/secplus-study) — exam prep app
+- [Kasm Registry](https://github.com/alove4tech/kasm-registry) — custom Kasm Workspaces registry
 
 ### Quick start
 
@@ -45,6 +47,8 @@ N100 mini PC. Compose configs are tuned for low resources (512MB RAM, 1 CPU per 
 - Add more service definitions under `docker/services/`
 - Add `docs/` when there is enough material to justify a dedicated documentation tree
 - Add `ansible/` when configuration management is in active use
+- Add monitoring stack (Prometheus + Grafana)
+- Add Tailscale / Wireguard networking notes
 
 
 ## Operating conventions
