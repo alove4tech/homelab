@@ -1,14 +1,15 @@
 # Security Policy
 
-## Reporting a Vulnerability
+## Reporting
 
-If you find a security issue in this project, please report it responsibly:
-
-- Open a [GitHub issue](https://github.com/alove4tech/homelab/issues) and tag it as a security concern
-- Or contact the maintainer directly through GitHub
-
-Please do not publicly disclose vulnerabilities before a fix is available.
+Found a security issue with a service config, exposed secret, or misconfiguration? Open an issue or contact the maintainer directly.
 
 ## Scope
 
-This policy covers the code and configuration in this repository. It does not cover third-party dependencies — report those to the respective upstream projects.
+This covers the infrastructure configs, Docker Compose files, and scripts in this repo. It does not cover the upstream services themselves (Gitea, Vaultwarden, Stirling PDF) — report those to their respective projects.
+
+## Best practices enforced
+
+- No secrets committed — all credentials live in `.env` files excluded by `.gitignore`
+- Each service runs with resource limits and `no-new-privileges`
+- Backup/restore scripts are provided alongside service definitions
