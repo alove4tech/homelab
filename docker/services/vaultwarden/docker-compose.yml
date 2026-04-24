@@ -16,10 +16,6 @@ services:
     env_file:
       - .env
 
-    # Optional: Override specific env vars directly in compose
-    # environment:
-    #   - ROCKET_WORKERS=2
-
     volumes:
       - vaultwarden-data:/data
 

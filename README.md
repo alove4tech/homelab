@@ -50,6 +50,17 @@ N100 mini PC. Compose configs are tuned for low resources (512MB RAM, 1 CPU per 
 - Add monitoring stack (Prometheus + Grafana)
 - Add Tailscale / Wireguard networking notes
 
+### Monitoring stack plan
+
+When the monitoring stack lands, it'll live at `docker/services/monitoring/` with:
+
+- **Prometheus** — metrics collection from Docker hosts and exporters
+- **Grafana** — dashboards for service health, resource usage, and alerting
+- **Node exporter** — host-level metrics (CPU, memory, disk, network)
+- **cAdvisor** — container-level metrics for running services
+
+Resource targets: Grafana at 256MB, Prometheus at 256MB, exporters at 64MB each. Total monitoring footprint should stay under 1GB on the N100.
+
 
 ## Operating conventions
 
