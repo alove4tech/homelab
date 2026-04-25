@@ -1,6 +1,6 @@
 services:
   stirlingpdf:
-    image: frooodle/s-pdf:latest
+    image: stirlingtools/stirling-pdf:latest
     container_name: stirlingpdf
     restart: unless-stopped
 

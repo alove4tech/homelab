@@ -15,10 +15,10 @@ services:
     environment:
       - USER_UID=1000
       - USER_GID=1000
-      - GITEA__server__ROOT_URL=http://192.168.69.16:3000/
-      - GITEA__server__SSH_DOMAIN=192.168.69.16
-      - GITEA__server__SSH_PORT=2222
-      - GITEA__server__SSH_LISTEN_PORT=2222
+      - GITEA__server__ROOT_URL=${GITEA_ROOT_URL:-http://192.168.69.16:3000/}
+      - GITEA__server__SSH_DOMAIN=${GITEA_SSH_DOMAIN:-192.168.69.16}
+      - GITEA__server__SSH_PORT=${GITEA_SSH_PORT:-2222}
+      - GITEA__server__SSH_LISTEN_PORT=${GITEA_SSH_LISTEN_PORT:-2222}
     # Uncomment to use env_file instead
     # env_file:
     #   - .env

@@ -12,7 +12,7 @@ Access at `http://<host>:8480`
 
 ## Multi-Architecture Support
 
-The `frooodle/s-pdf:latest` image publishes manifests for both **amd64** and **arm64**. Docker will automatically pull the correct variant for your host architecture — no special configuration needed.
+The `stirlingtools/stirling-pdf:latest` image publishes manifests for both **amd64** and **arm64**. Docker will automatically pull the correct variant for your host architecture — no special configuration needed.
 
 ## Configuration
 
