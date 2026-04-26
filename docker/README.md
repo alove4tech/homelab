@@ -76,4 +76,4 @@ Services are configured with resource limits for the N100 mini PC:
 
 ## Restore notes
 
-Every service README should eventually include both backup and restore steps. Backups are only half the job if recovery steps are missing when something breaks.
+Every service README now includes both backup and restore steps, and all services include backup/restore scripts (`backup.sh` and `restore.sh`) for quick operational use. Backups are only half the job if recovery steps are missing when something breaks.

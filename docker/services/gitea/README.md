@@ -31,7 +31,28 @@ First run opens a setup wizard at `http://<host>:3000`. After that, config lives
 |-------|---------|
 | gitea-data | Repos, config, database, LFS |
 
-## Backup
+## Quick backup
+
+A backup script is included:
+
+```bash
+chmod +x backup.sh
+./backup.sh
+# or specify a directory: ./backup.sh /path/to/backups
+```
+
+## Quick restore
+
+A restore script is also included:
+
+```bash
+chmod +x restore.sh
+./restore.sh backups/gitea-backup-YYYYMMDD-HHMMSS.tar.gz
+```
+
+It stops the container, restores data, and starts it back up.
+
+## Manual backup
 
 Stop and start are not strictly required for a file-level backup, but taking a short maintenance window is safer if the instance is busy.
 

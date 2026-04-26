@@ -36,7 +36,28 @@ By default the app runs without authentication. To enable login:
 | stirlingpdf-data | OCR/Tesseract data |
 | stirlingpdf-config | App configuration files |
 
-## Backup
+## Quick backup
+
+A backup script is included:
+
+```bash
+chmod +x backup.sh
+./backup.sh
+# or specify a directory: ./backup.sh /path/to/backups
+```
+
+## Quick restore
+
+A restore script is also included:
+
+```bash
+chmod +x restore.sh
+./restore.sh backups/stirlingpdf-data-YYYYMMDD-HHMMSS.tar.gz backups/stirlingpdf-config-YYYYMMDD-HHMMSS.tar.gz
+```
+
+It stops the container, restores both data and config volumes, and starts it back up.
+
+## Manual backup
 
 ```bash
 mkdir -p backups
