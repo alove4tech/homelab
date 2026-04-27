@@ -2,7 +2,7 @@
 
 Self-hosted Bitwarden-compatible password manager.
 
-## Setup
+## Quick Start
 
 ### 1. Generate admin token
 
@@ -32,49 +32,18 @@ docker compose up -d
 
 Visit your domain, make an account, then set `SIGNUPS_ALLOWED: 'false'` and restart.
 
-## Reverse proxy
+## Ports
 
-Using Pangolin — point it at port 80. Enable WebSocket support for the `/notifications/hub` endpoint (needed for real-time sync).
+| Port | Purpose |
+|------|---------|
+| 80 | HTTP (use reverse proxy with SSL in production) |
+| 3012 | WebSocket (real-time sync) |
 
-## Backups
+## Volumes
 
-```bash
-mkdir -p backups
-
-docker run --rm \
-  -v vaultwarden-data:/data:ro \
-  -v $(pwd)/backups:/backup \
-  alpine tar czf /backup/vaultwarden-backup-$(date +%Y%m%d).tar.gz -C /data .
-```
-
-## Restore
-
-Stop the stack before restoring so the database is not being written to mid-restore.
-
-```bash
-docker compose down
-mkdir -p restore
-
-tar xzf backups/vaultwarden-backup-YYYYMMDD.tar.gz -C restore
-
-docker run --rm \
-  -v vaultwarden-data:/data \
-  -v $(pwd)/restore:/restore:ro \
-  alpine sh -c 'rm -rf /data/* && cp -a /restore/. /data/'
-
-docker compose up -d
-```
-
-After the container is healthy again, sign in and confirm logins, attachments, and admin access all look normal.
-
-## Useful commands
-
-```bash
-docker compose logs -f vaultwarden
-docker compose restart vaultwarden
-docker compose pull && docker compose up -d
-docker exec -it vaultwarden sqlite3 /data/db.sqlite3
-```
+| Mount | Purpose |
+|-------|---------|
+| vaultwarden-data | SQLite database, attachments, config |
 
 ## Quick backup
 
@@ -96,6 +65,50 @@ chmod +x restore.sh
 ```
 
 It stops the container, restores data, and starts it back up.
+
+## Manual backup
+
+```bash
+mkdir -p backups
+
+docker run --rm \
+  -v vaultwarden-data:/data:ro \
+  -v $(pwd)/backups:/backup \
+  alpine tar czf /backup/vaultwarden-backup-$(date +%Y%m%d).tar.gz -C /data .
+```
+
+## Manual restore
+
+Stop the stack before restoring so the database is not being written to mid-restore.
+
+```bash
+docker compose down
+mkdir -p restore
+
+tar xzf backups/vaultwarden-backup-YYYYMMDD.tar.gz -C restore
+
+docker run --rm \
+  -v vaultwarden-data:/data \
+  -v $(pwd)/restore:/restore:ro \
+  alpine sh -c 'rm -rf /data/* && cp -a /restore/. /data/'
+
+docker compose up -d
+```
+
+After the container is healthy again, sign in and confirm logins, attachments, and admin access all look normal.
+
+## Reverse proxy
+
+Using Pangolin — point it at port 80. Enable WebSocket support for the `/notifications/hub` endpoint (needed for real-time sync).
+
+## Useful commands
+
+```bash
+docker compose logs -f vaultwarden
+docker compose restart vaultwarden
+docker compose pull && docker compose up -d
+docker exec -it vaultwarden sqlite3 /data/db.sqlite3
+```
 
 ## Resources
 
