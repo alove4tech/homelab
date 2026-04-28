@@ -40,7 +40,7 @@ docker compose up -d
 
 ## Hardware
 
-Raspberry Pi 400 (4GB RAM). Compose configs are tuned for low resources (512MB RAM, 1 CPU per service). Stirling PDF gets 2 CPUs and 1GB due to heavier processing workloads.
+Raspberry Pi 400 4GB running Debian 13 (trixie) on aarch64. Compose configs are tuned for low resources (512MB RAM, 1 CPU per service). Stirling PDF gets 2 CPUs and 1GB due to heavier processing workloads.
 
 ## Roadmap
 
@@ -65,9 +65,9 @@ When the monitoring stack lands, it'll live at `docker/services/monitoring/` wit
 |---|---|---|---|---|---|
 | Gitea | `gitea/gitea:latest` | 512MB | 1 | 3000, 2222 | Git hosting, SSH on 2222 |
 | Stirling PDF | `stirlingtools/stirling-pdf:latest` | 1GB | 2 | 8480 | PDF processing, no auth by default |
-| Vaultwarden | `vaultwarden/server:latest` | 512MB | 1 | 80, 3012 | Bitwarden-compatible, WebSocket on 3012 |
+| Vaultwarden | `vaultwarden/server:latest` | 512MB | 1 | 80 | Bitwarden-compatible, WebSocket built-in since v1.29+ |
 
-Resource targets: Grafana at 256MB, Prometheus at 256MB, exporters at 64MB each. Total monitoring footprint should stay under 1GB on the N100.
+Resource targets: Grafana at 256MB, Prometheus at 256MB, exporters at 64MB each. Total monitoring footprint should stay under 1GB on the Pi 400.
 
 
 ## Operating conventions

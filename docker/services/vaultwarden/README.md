@@ -35,9 +35,10 @@ Visit your domain, make an account, then set `SIGNUPS_ALLOWED: 'false'` and rest
 ## Ports
 
 | Port | Purpose |
-|------|---------|
-| 80 | HTTP (use reverse proxy with SSL in production) |
-| 3012 | WebSocket (real-time sync) |
+|------|----------|
+| 80 | HTTP + built-in WebSocket (since v1.29+) |
+
+> **Note:** The separate WebSocket port (3012) is no longer needed with Vaultwarden 1.29+. Real-time sync works over the main HTTP connection.
 
 ## Volumes
 

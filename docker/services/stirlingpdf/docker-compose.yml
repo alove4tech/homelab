@@ -42,8 +42,10 @@ services:
     # Security hardening
     security_opt:
       - no-new-privileges:true
+    read_only: true
     tmpfs:
       - /tmp
+      - /pipeline:mode=770,size=100m
 
 volumes:
   stirlingpdf-data:

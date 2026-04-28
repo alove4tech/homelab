@@ -61,7 +61,7 @@ done
 
 ## 📊 Resource Limits
 
-Services are configured with resource limits for the N100 mini PC:
+Services are configured with resource limits for the Raspberry Pi 400:
 - CPU: 1 core per service (adjust as needed)
 - Memory: 512MB per service (conservative, can increase)
 - Health checks enabled
