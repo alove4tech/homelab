@@ -21,3 +21,8 @@ docker run --rm \
 
 echo "Done. Backup size: $(du -h "${BACKUP_DIR}/${BACKUP_FILE}" | cut -f1)"
 echo "File: ${BACKUP_DIR}/${BACKUP_FILE}"
+
+# Generate checksum for verification
+cd "$BACKUP_DIR"
+sha256sum "$BACKUP_FILE" > "${BACKUP_FILE}.sha256"
+echo "Checksum: ${BACKUP_FILE}.sha256"

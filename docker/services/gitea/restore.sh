@@ -17,6 +17,21 @@ if [ ! -f "$BACKUP_FILE" ]; then
   exit 1
 fi
 
+# Verify checksum if available
+CHECKSUM_FILE="${BACKUP_FILE}.sha256"
+if [ -f "$CHECKSUM_FILE" ]; then
+  echo "Verifying checksum..."
+  cd "$(dirname "$BACKUP_FILE")"
+  if sha256sum -c "$(basename "$CHECKSUM_FILE")" --quiet; then
+    echo "Checksum OK."
+  else
+    echo "Error: Checksum mismatch! Aborting restore."
+    exit 1
+  fi
+else
+  echo "Warning: No checksum file found. Skipping verification."
+fi
+
 echo "WARNING: This will replace all Gitea data with the contents of $BACKUP_FILE"
 echo "Press Ctrl+C to cancel, or wait 5 seconds..."
 sleep 5

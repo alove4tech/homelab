@@ -23,6 +23,23 @@ if [ ! -f "$CONFIG_BACKUP" ]; then
   exit 1
 fi
 
+# Verify checksums if available
+for BACKUP_FILE in "$DATA_BACKUP" "$CONFIG_BACKUP"; do
+  CHECKSUM_FILE="${BACKUP_FILE}.sha256"
+  if [ -f "$CHECKSUM_FILE" ]; then
+    echo "Verifying checksum for $(basename "$BACKUP_FILE")..."
+    cd "$(dirname "$BACKUP_FILE")"
+    if sha256sum -c "$(basename "$CHECKSUM_FILE")" --quiet; then
+      echo "Checksum OK."
+    else
+      echo "Error: Checksum mismatch for $(basename "$BACKUP_FILE")! Aborting restore."
+      exit 1
+    fi
+  else
+    echo "Warning: No checksum for $(basename "$BACKUP_FILE"). Skipping."
+  fi
+done
+
 echo "WARNING: This will replace all Stirling PDF data and config"
 echo "Press Ctrl+C to cancel, or wait 5 seconds..."
 sleep 5

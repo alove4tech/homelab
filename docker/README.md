@@ -77,3 +77,27 @@ Services are configured with resource limits for the Raspberry Pi 400:
 ## Restore notes
 
 Every service README now includes both backup and restore steps, and all services include backup/restore scripts (`backup.sh` and `restore.sh`) for quick operational use. Backups are only half the job if recovery steps are missing when something breaks.
+
+## Health checks
+
+Quick commands to verify each service is running:
+
+```bash
+# Check all running containers
+docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+
+# Gitea
+curl -sf http://localhost:3000/api/v1/version
+
+# Stirling PDF
+curl -sf http://localhost:8480/api/v1/info
+
+# Vaultwarden
+curl -sf http://localhost:80/alive
+```
+
+All docker-compose files include health checks. View status with:
+
+```bash
+docker compose ps  # Run from any service directory
+```

@@ -20,6 +20,14 @@ docker run --rm \
   alpine sh -c "tar czf /backup/stirlingpdf-data-${TIMESTAMP}.tar.gz -C /data . && tar czf /backup/stirlingpdf-config-${TIMESTAMP}.tar.gz -C /config ."
 
 echo "Done."
+
+# Generate checksums for verification
+cd "$BACKUP_DIR"
+for f in stirlingpdf-data-${TIMESTAMP}.tar.gz stirlingpdf-config-${TIMESTAMP}.tar.gz; do
+  sha256sum "$f" > "${f}.sha256"
+done
+
 echo "Files:"
 echo "  ${BACKUP_DIR}/stirlingpdf-data-${TIMESTAMP}.tar.gz"
 echo "  ${BACKUP_DIR}/stirlingpdf-config-${TIMESTAMP}.tar.gz"
+echo "Checksums written alongside each archive."
