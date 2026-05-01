@@ -19,10 +19,15 @@ docker run --rm \
   -v "${BACKUP_DIR}":/backup \
   alpine tar czf "/backup/${BACKUP_FILE}" -C /data .
 
-echo "Done. Backup size: $(du -h "${BACKUP_DIR}/${BACKUP_FILE}" | cut -f1)"
-echo "File: ${BACKUP_DIR}/${BACKUP_FILE}"
+if [ ! -f "${BACKUP_DIR}/${BACKUP_FILE}" ]; then
+  echo "Error: Backup file was not created"
+  exit 1
+fi
 
 # Generate checksum for verification
 cd "$BACKUP_DIR"
 sha256sum "$BACKUP_FILE" > "${BACKUP_FILE}.sha256"
+
+echo "Done. Backup size: $(du -h "${BACKUP_DIR}/${BACKUP_FILE}" | cut -f1)"
+echo "File: ${BACKUP_DIR}/${BACKUP_FILE}"
 echo "Checksum: ${BACKUP_FILE}.sha256"
