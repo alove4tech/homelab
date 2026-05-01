@@ -69,7 +69,6 @@ When the monitoring stack lands, it'll live at `docker/services/monitoring/` wit
 
 Resource targets: Grafana at 256MB, Prometheus at 256MB, exporters at 64MB each. Total monitoring footprint should stay under 1GB on the Pi 400.
 
-
 ## Operating conventions
 
 - Keep each service self-contained with its own README and `.env.example`.
