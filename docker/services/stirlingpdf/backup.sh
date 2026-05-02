@@ -19,6 +19,13 @@ docker run --rm \
   -v "${BACKUP_DIR}":/backup \
   alpine sh -c "tar czf /backup/stirlingpdf-data-${TIMESTAMP}.tar.gz -C /data . && tar czf /backup/stirlingpdf-config-${TIMESTAMP}.tar.gz -C /config ."
 
+for f in stirlingpdf-data-${TIMESTAMP}.tar.gz stirlingpdf-config-${TIMESTAMP}.tar.gz; do
+  if [ ! -f "${BACKUP_DIR}/${f}" ]; then
+    echo "Error: ${f} was not created"
+    exit 1
+  fi
+done
+
 echo "Done."
 
 # Generate checksums for verification

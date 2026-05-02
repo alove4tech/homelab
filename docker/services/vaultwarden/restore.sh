@@ -50,4 +50,4 @@ docker run --rm \
 echo "Starting Vaultwarden container..."
 docker compose -f "$(dirname "$0")/docker-compose.yml" start vaultwarden
 
-echo "Done. Verify the restore by checking https://your-vaultwarden-url/alive"
+echo "Done. Verify the restore by checking http://<host>:80/alive"
