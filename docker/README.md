@@ -22,6 +22,9 @@ docker/services/<service-name>/
 | Gitea | Lightweight self-hosted Git service | `gitea/` |
 | Stirling PDF | Self-hosted PDF processing (merge, split, OCR, convert) | `stirlingpdf/` |
 | IT Tools | Self-hosted developer/network/crypto utility toolbox | `it-tools/` |
+| Linkstack | Self-hosted link-in-bio page (Linktree alternative) | `linkstack/` |
+| Lubelogger | Vehicle maintenance and fuel mileage tracker | `lubelogger/` |
+| Nexterm | Web-based terminal manager (SSH, Telnet, VNC) | `nexterm/` |
 
 ## 🚀 Deployment
 
@@ -97,6 +100,15 @@ curl -sf http://localhost:8480/api/v1/info
 
 # IT Tools
 curl -sf http://localhost:8081
+
+# Linkstack
+curl -sf http://localhost:8082
+
+# Lubelogger
+curl -sf http://localhost:8083
+
+# Nexterm
+curl -sf http://localhost:6989
 
 # Vaultwarden
 curl -sf http://localhost:80/alive

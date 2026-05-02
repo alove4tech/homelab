@@ -1,0 +1,41 @@
+services:
+  linkstack:
+    image: linkstackorg/linkstack:latest
+    container_name: linkstack
+    restart: unless-stopped
+
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          memory: 64M
+
+    ports:
+      - "${LINKSTACK_PORT:-8082}:80"
+
+    volumes:
+      - linkstack-data:/htdocs/database
+      - linkstack-storage:/htdocs/storage
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost -A 'HealthCheck' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+    networks:
+      - linkstack-net
+
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  linkstack-data:
+  linkstack-storage:
+
+networks:
+  linkstack-net:
+    driver: bridge

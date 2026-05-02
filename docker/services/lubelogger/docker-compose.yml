@@ -1,0 +1,41 @@
+services:
+  lubelogger:
+    image: hargata/lubelogger:latest
+    container_name: lubelogger
+    restart: unless-stopped
+
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          memory: 64M
+
+    ports:
+      - "${LUBELOGGER_PORT:-8083}:8080"
+
+    volumes:
+      - lubelogger-data:/App/data
+      - lubelogger-keys:/root/.aspnet/DataProtection-Keys
+
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+    networks:
+      - lubelogger-net
+
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  lubelogger-data:
+  lubelogger-keys:
+
+networks:
+  lubelogger-net:
+    driver: bridge

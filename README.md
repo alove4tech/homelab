@@ -20,6 +20,9 @@ Each service lives in `docker/services/<name>/` with its own docker-compose.yml,
 |---|---|---|
 | Gitea | Lightweight self-hosted Git service | `docker/services/gitea/` |
 | IT Tools | Self-hosted toolbox for developer, network, crypto, encoding, and conversion utilities | `docker/services/it-tools/` |
+| Linkstack | Self-hosted link-in-bio page (Linktree alternative) | `docker/services/linkstack/` |
+| Lubelogger | Vehicle maintenance and fuel mileage tracker | `docker/services/lubelogger/` |
+| Nexterm | Web-based terminal manager (SSH, Telnet, VNC) | `docker/services/nexterm/` |
 | Stirling PDF | PDF processing (merge, split, OCR, convert) | `docker/services/stirlingpdf/` |
 | Vaultwarden | Self-hosted Bitwarden-compatible password manager | `docker/services/vaultwarden/` |
 
@@ -66,6 +69,9 @@ When the monitoring stack lands, it'll live at `docker/services/monitoring/` wit
 |---|---|---|---|---|---|
 | Gitea | `gitea/gitea:latest` | 512MB | 1 | 3000, 2222 | Git hosting, SSH on 2222 |
 | IT Tools | `corentinth/it-tools:latest` | 256MB | 0.5 | 8081 | Stateless internal toolbox |
+| Linkstack | `linkstackorg/linkstack:latest` | 256MB | 0.5 | 8082 | Link-in-bio, SQLite DB + storage |
+| Lubelogger | `hargata/lubelogger:latest` | 256MB | 0.5 | 8083 | Vehicle tracker, ASP.NET |
+| Nexterm | `germannewsmaker/nexterm:latest` | 512MB | 1 | 6989 | Terminal manager, includes guacd |
 | Stirling PDF | `stirlingtools/stirling-pdf:latest` | 1GB | 2 | 8480 | PDF processing, no auth by default |
 | Vaultwarden | `vaultwarden/server:latest` | 512MB | 1 | 80 | Bitwarden-compatible, WebSocket built-in since v1.29+ |
 
