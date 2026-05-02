@@ -9,7 +9,9 @@ Each service has its own directory:
 docker/services/<service-name>/
 ├── docker-compose.yml
 ├── README.md
-└── .env.example
+├── .env.example
+├── backup.sh
+└── restore.sh
 ```
 
 ## Current services
