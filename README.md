@@ -19,6 +19,7 @@ Each service lives in `docker/services/<name>/` with its own docker-compose.yml,
 | Service | Purpose | Path |
 |---|---|---|
 | Gitea | Lightweight self-hosted Git service | `docker/services/gitea/` |
+| IT Tools | Self-hosted toolbox for developer, network, crypto, encoding, and conversion utilities | `docker/services/it-tools/` |
 | Stirling PDF | PDF processing (merge, split, OCR, convert) | `docker/services/stirlingpdf/` |
 | Vaultwarden | Self-hosted Bitwarden-compatible password manager | `docker/services/vaultwarden/` |
 
@@ -64,6 +65,7 @@ When the monitoring stack lands, it'll live at `docker/services/monitoring/` wit
 | Service | Image | RAM | CPU | Port(s) | Notes |
 |---|---|---|---|---|---|
 | Gitea | `gitea/gitea:latest` | 512MB | 1 | 3000, 2222 | Git hosting, SSH on 2222 |
+| IT Tools | `corentinth/it-tools:latest` | 256MB | 0.5 | 8081 | Stateless internal toolbox |
 | Stirling PDF | `stirlingtools/stirling-pdf:latest` | 1GB | 2 | 8480 | PDF processing, no auth by default |
 | Vaultwarden | `vaultwarden/server:latest` | 512MB | 1 | 80 | Bitwarden-compatible, WebSocket built-in since v1.29+ |
 
