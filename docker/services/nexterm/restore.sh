@@ -35,6 +35,19 @@ if [ ! -f "$DATA_FILE" ]; then
     exit 1
 fi
 
+# Verify checksum if available
+checksum="${DATA_FILE}.sha256"
+if [ -f "$checksum" ]; then
+    echo "Verifying checksum..."
+    cd "$BACKUP_DIR"
+    if sha256sum -c "$(basename "$checksum")" --quiet; then
+        echo "  OK"
+    else
+        echo "Error: Checksum mismatch! Aborting."
+        exit 1
+    fi
+fi
+
 echo "WARNING: This will replace current Nexterm data. Press Ctrl+C to cancel."
 read -r -p "Continue? [y/N] " confirm
 if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
