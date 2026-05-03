@@ -44,6 +44,21 @@ if [ ! -f "$KEYS_FILE" ]; then
     exit 1
 fi
 
+# Verify checksums if available
+for f in "$DATA_FILE" "$KEYS_FILE"; do
+    checksum="${f}.sha256"
+    if [ -f "$checksum" ]; then
+        echo "Verifying checksum for $(basename "$f")..."
+        cd "$BACKUP_DIR"
+        if sha256sum -c "$(basename "$checksum")" --quiet; then
+            echo "  OK"
+        else
+            echo "Error: Checksum mismatch for $(basename "$f")! Aborting."
+            exit 1
+        fi
+    fi
+done
+
 echo "WARNING: This will replace current Lubelogger data. Press Ctrl+C to cancel."
 read -r -p "Continue? [y/N] " confirm
 if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then

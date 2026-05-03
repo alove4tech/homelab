@@ -17,3 +17,8 @@ docker run --rm \
 
 echo "Backup complete: $BACKUP_DIR"
 ls -lh "$BACKUP_DIR"/nexterm-data-"${TIMESTAMP}".tar.gz
+
+# Generate checksum
+cd "$BACKUP_DIR"
+sha256sum "nexterm-data-${TIMESTAMP}.tar.gz" > "nexterm-data-${TIMESTAMP}.tar.gz.sha256"
+echo "Checksum written."

@@ -23,3 +23,10 @@ docker run --rm \
 
 echo "Backup complete: $BACKUP_DIR"
 ls -lh "$BACKUP_DIR"/linkstack-*-"${TIMESTAMP}".tar.gz
+
+# Generate checksums
+cd "$BACKUP_DIR"
+for f in linkstack-data-${TIMESTAMP}.tar.gz linkstack-storage-${TIMESTAMP}.tar.gz; do
+    sha256sum "$f" > "${f}.sha256"
+done
+echo "Checksums written."

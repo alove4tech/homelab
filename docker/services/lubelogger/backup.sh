@@ -23,3 +23,10 @@ docker run --rm \
 
 echo "Backup complete: $BACKUP_DIR"
 ls -lh "$BACKUP_DIR"/lubelogger-*-"${TIMESTAMP}".tar.gz
+
+# Generate checksums
+cd "$BACKUP_DIR"
+for f in lubelogger-data-${TIMESTAMP}.tar.gz lubelogger-keys-${TIMESTAMP}.tar.gz; do
+    sha256sum "$f" > "${f}.sha256"
+done
+echo "Checksums written."
