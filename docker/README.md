@@ -96,7 +96,7 @@ docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 curl -sf http://localhost:3000/api/v1/version
 
 # Stirling PDF
-curl -sf http://localhost:8480/api/v1/info
+curl -sf http://localhost:8480/api/v1/info/status
 
 # IT Tools
 curl -sf http://localhost:8081

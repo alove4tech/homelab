@@ -26,14 +26,13 @@ for f in stirlingpdf-data-${TIMESTAMP}.tar.gz stirlingpdf-config-${TIMESTAMP}.ta
   fi
 done
 
-echo "Done."
-
 # Generate checksums for verification
 cd "$BACKUP_DIR"
 for f in stirlingpdf-data-${TIMESTAMP}.tar.gz stirlingpdf-config-${TIMESTAMP}.tar.gz; do
   sha256sum "$f" > "${f}.sha256"
 done
 
+echo "Done."
 echo "Files:"
 echo "  ${BACKUP_DIR}/stirlingpdf-data-${TIMESTAMP}.tar.gz"
 echo "  ${BACKUP_DIR}/stirlingpdf-config-${TIMESTAMP}.tar.gz"
