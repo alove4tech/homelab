@@ -33,7 +33,7 @@ First run opens a setup wizard at `http://<host>:3000`. After that, config lives
 
 ## Quick backup
 
-A backup script is included:
+A backup script is included. It stops the container briefly for a consistent SQLite snapshot, then starts it again:
 
 ```bash
 chmod +x backup.sh

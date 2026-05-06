@@ -12,12 +12,20 @@ BACKUP_FILE="gitea-backup-${TIMESTAMP}.tar.gz"
 
 mkdir -p "$BACKUP_DIR"
 
+# Stop the container for a consistent snapshot — Gitea's SQLite DB can
+# produce a corrupt backup if written to mid-copy.
+echo "Stopping Gitea container for consistent backup..."
+docker compose -f "$SCRIPT_DIR/docker-compose.yml" stop gitea
+
 echo "Backing up Gitea data to ${BACKUP_DIR}/${BACKUP_FILE}..."
 
 docker run --rm \
   -v gitea-data:/data:ro \
   -v "${BACKUP_DIR}":/backup \
   alpine tar czf "/backup/${BACKUP_FILE}" -C /data .
+
+echo "Starting Gitea container..."
+docker compose -f "$SCRIPT_DIR/docker-compose.yml" start gitea
 
 if [ ! -f "${BACKUP_DIR}/${BACKUP_FILE}" ]; then
   echo "Error: Backup file was not created"
