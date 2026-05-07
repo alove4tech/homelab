@@ -2,9 +2,12 @@
 # Vaultwarden backup script
 # Usage: ./backup.sh [backup_dir]
 # Defaults to ./backups next to this script
+#
+# Keeps the 5 most recent backups; older ones are pruned automatically.
 
 set -euo pipefail
 
+KEEP_COUNT=5
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 BACKUP_DIR="${1:-$SCRIPT_DIR/backups}"
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
@@ -27,6 +30,16 @@ fi
 # Generate checksum for verification
 cd "$BACKUP_DIR"
 sha256sum "$BACKUP_FILE" > "${BACKUP_FILE}.sha256"
+
+# Prune old backups (keep the newest $KEEP_COUNT)
+pruned=$(ls -1t vaultwarden-backup-*.tar.gz 2>/dev/null | tail -n +"$((KEEP_COUNT + 1))")
+if [ -n "$pruned" ]; then
+  echo "Pruning old backups (keeping last ${KEEP_COUNT})..."
+  echo "$pruned" | while read -r old; do
+    rm -f "$old" "${old}.sha256"
+    echo "  Removed: $old"
+  done
+fi
 
 echo "Done. Backup size: $(du -h "${BACKUP_DIR}/${BACKUP_FILE}" | cut -f1)"
 echo "File: ${BACKUP_DIR}/${BACKUP_FILE}"

@@ -2,9 +2,12 @@
 # Gitea backup script
 # Usage: ./backup.sh [backup_dir]
 # Defaults to ./backups next to this script
+#
+# Keeps the 5 most recent backups; older ones are pruned automatically.
 
 set -euo pipefail
 
+KEEP_COUNT=5
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 BACKUP_DIR="${1:-$SCRIPT_DIR/backups}"
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
@@ -17,15 +20,19 @@ mkdir -p "$BACKUP_DIR"
 echo "Stopping Gitea container for consistent backup..."
 docker compose -f "$SCRIPT_DIR/docker-compose.yml" stop gitea
 
+# Ensure the container gets restarted even if the backup fails
+cleanup() {
+  echo "Starting Gitea container..."
+  docker compose -f "$SCRIPT_DIR/docker-compose.yml" start gitea
+}
+trap cleanup EXIT
+
 echo "Backing up Gitea data to ${BACKUP_DIR}/${BACKUP_FILE}..."
 
 docker run --rm \
   -v gitea-data:/data:ro \
   -v "${BACKUP_DIR}":/backup \
   alpine tar czf "/backup/${BACKUP_FILE}" -C /data .
-
-echo "Starting Gitea container..."
-docker compose -f "$SCRIPT_DIR/docker-compose.yml" start gitea
 
 if [ ! -f "${BACKUP_DIR}/${BACKUP_FILE}" ]; then
   echo "Error: Backup file was not created"
@@ -35,6 +42,16 @@ fi
 # Generate checksum for verification
 cd "$BACKUP_DIR"
 sha256sum "$BACKUP_FILE" > "${BACKUP_FILE}.sha256"
+
+# Prune old backups (keep the newest $KEEP_COUNT)
+pruned=$(ls -1t gitea-backup-*.tar.gz 2>/dev/null | tail -n +"$((KEEP_COUNT + 1))")
+if [ -n "$pruned" ]; then
+  echo "Pruning old backups (keeping last ${KEEP_COUNT})..."
+  echo "$pruned" | while read -r old; do
+    rm -f "$old" "${old}.sha256"
+    echo "  Removed: $old"
+  done
+fi
 
 echo "Done. Backup size: $(du -h "${BACKUP_DIR}/${BACKUP_FILE}" | cut -f1)"
 echo "File: ${BACKUP_DIR}/${BACKUP_FILE}"

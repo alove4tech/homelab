@@ -84,6 +84,20 @@ Services are configured with resource limits for the Raspberry Pi 400:
 
 Every service README now includes both backup and restore steps, and all services include backup/restore scripts (`backup.sh` and `restore.sh`) for quick operational use. Backups are only half the job if recovery steps are missing when something breaks.
 
+### Backup rotation
+
+Stateful backup scripts automatically prune old backups, keeping only the 5 most recent. Adjust `KEEP_COUNT` at the top of any `backup.sh` if you need more or fewer.
+
+## Quick status check
+
+A `status.sh` script in this directory gives you a quick overview of all services, plus host disk and memory usage:
+
+```bash
+cd docker
+chmod +x status.sh
+./status.sh
+```
+
 ## Health checks
 
 Quick commands to verify each service is running:
