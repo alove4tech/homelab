@@ -41,7 +41,8 @@ for dir in "$SERVICES_DIR"/*/; do
         else
             status="${RED}stopped${NC}"
         fi
-        port=$(grep -oP '"[0-9]+:' "$dir/docker-compose.yml" 2>/dev/null | head -1 | tr -d '":' || echo "—")
+        # Extract first published port from docker-compose.yml (portable grep)
+        port=$(grep -E '^\s*- ["'"'"']?[0-9]+' "$dir/docker-compose.yml" 2>/dev/null | head -1 | grep -oE '[0-9]+' | head -1 || echo "—")
         echo -e "  $name: $status ${DIM}(port $port)${NC}"
     fi
 done
