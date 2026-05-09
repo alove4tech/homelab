@@ -44,15 +44,26 @@ After setting the key, create an admin account on first visit, then add your SSH
 |--------|---------------|---------|
 | `nexterm-data` | `/app/data` | SQLite database and session recordings |
 
-## Backup and restore
+## Quick backup
+
+A backup script is included:
 
 ```bash
-chmod +x backup.sh restore.sh
+chmod +x backup.sh
 ./backup.sh
-./restore.sh
+# or specify a directory: ./backup.sh /path/to/backups
 ```
 
-`backup.sh` creates a timestamped tar archive of the data volume. `restore.sh` restores from a specified backup file.
+## Quick restore
+
+A restore script is also included:
+
+```bash
+chmod +x restore.sh
+./restore.sh backups/nexterm-data-YYYYMMDD-HHMMSS.tar.gz
+```
+
+It stops the container, restores data, and starts it back up.
 
 ### Manual backup
 

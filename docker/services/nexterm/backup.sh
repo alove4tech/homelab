@@ -28,6 +28,17 @@ fi
 cd "$BACKUP_DIR"
 sha256sum "$BACKUP_FILE" > "${BACKUP_FILE}.sha256"
 
+# Prune old backups (keep the newest 5)
+KEEP_COUNT=5
+pruned=$(ls -1t nexterm-data-*.tar.gz 2>/dev/null | tail -n +"$((KEEP_COUNT + 1))")
+if [ -n "$pruned" ]; then
+    echo "Pruning old backups (keeping last ${KEEP_COUNT})..."
+    echo "$pruned" | while read -r old; do
+        rm -f "$old" "${old}.sha256"
+        echo "  Removed: $old"
+    done
+fi
+
 echo "Done. Backup size: $(du -h "${BACKUP_DIR}/${BACKUP_FILE}" | cut -f1)"
 echo "File: ${BACKUP_DIR}/${BACKUP_FILE}"
 echo "Checksum: ${BACKUP_FILE}.sha256"

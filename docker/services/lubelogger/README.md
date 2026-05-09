@@ -37,15 +37,26 @@ Lubelogger is configured through the web UI after first launch. The default auth
 | `lubelogger-data` | `/App/data` | Vehicle records, database, uploads |
 | `lubelogger-keys` | `/root/.aspnet/DataProtection-Keys` | Data protection encryption keys |
 
-## Backup and restore
+## Quick backup
+
+A backup script is included:
 
 ```bash
-chmod +x backup.sh restore.sh
+chmod +x backup.sh
 ./backup.sh
-./restore.sh
+# or specify a directory: ./backup.sh /path/to/backups
 ```
 
-`backup.sh` creates a timestamped tar archive of both volumes. `restore.sh` restores from a specified backup file.
+## Quick restore
+
+A restore script is also included:
+
+```bash
+chmod +x restore.sh
+./restore.sh backups/lubelogger-data-YYYYMMDD-HHMMSS.tar.gz backups/lubelogger-keys-YYYYMMDD-HHMMSS.tar.gz
+```
+
+It stops the container, restores both data and keys volumes, and starts it back up.
 
 ### Manual backup
 

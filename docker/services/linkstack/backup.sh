@@ -36,6 +36,19 @@ for f in linkstack-data-${TIMESTAMP}.tar.gz linkstack-storage-${TIMESTAMP}.tar.g
     sha256sum "$f" > "${f}.sha256"
 done
 
+# Prune old backups (keep the newest 5 of each)
+KEEP_COUNT=5
+for prefix in linkstack-data linkstack-storage; do
+    pruned=$(ls -1t ${prefix}-*.tar.gz 2>/dev/null | tail -n +"$((KEEP_COUNT + 1))")
+    if [ -n "$pruned" ]; then
+        echo "Pruning old ${prefix} backups (keeping last ${KEEP_COUNT})..."
+        echo "$pruned" | while read -r old; do
+            rm -f "$old" "${old}.sha256"
+            echo "  Removed: $old"
+        done
+    fi
+done
+
 echo "Done. Files:"
 echo "  ${BACKUP_DIR}/linkstack-data-${TIMESTAMP}.tar.gz"
 echo "  ${BACKUP_DIR}/linkstack-storage-${TIMESTAMP}.tar.gz"

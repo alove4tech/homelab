@@ -31,6 +31,10 @@ services:
 
     security_opt:
       - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run
 
 volumes:
   lubelogger-data:

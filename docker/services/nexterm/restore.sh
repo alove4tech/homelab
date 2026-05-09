@@ -1,64 +1,53 @@
 #!/usr/bin/env bash
 # Nexterm restore script
-# Restores data from a backup archive.
-# Usage: ./restore.sh <timestamp>
-# If no timestamp given, lists available backups and prompts.
+# Usage: ./restore.sh <backup_file>
+# Restores a tar.gz backup created by backup.sh
 
 set -euo pipefail
 
-BACKUP_DIR="$(cd "$(dirname "$0")" && pwd)/backups"
-
-if [ ! -d "$BACKUP_DIR" ]; then
-    echo "No backups directory found at $BACKUP_DIR"
-    exit 1
-fi
-
-list_backups() {
-    echo "Available backups:"
-    ls -1t "$BACKUP_DIR"/nexterm-data-*.tar.gz 2>/dev/null || echo "  (none)"
-}
-
 if [ $# -lt 1 ]; then
-    list_backups
-    echo ""
-    echo "Usage: $0 <timestamp>"
-    echo "Example: $0 20250101-120000"
+    echo "Usage: $0 <backup_file.tar.gz>"
     exit 1
 fi
 
-TIMESTAMP="$1"
+BACKUP_FILE="$(readlink -f "$1")"
 
-DATA_FILE="$BACKUP_DIR/nexterm-data-${TIMESTAMP}.tar.gz"
-
-if [ ! -f "$DATA_FILE" ]; then
-    echo "Backup not found: $DATA_FILE"
+if [ ! -f "$BACKUP_FILE" ]; then
+    echo "Error: $BACKUP_FILE not found"
     exit 1
 fi
 
 # Verify checksum if available
-checksum="${DATA_FILE}.sha256"
-if [ -f "$checksum" ]; then
+CHECKSUM_FILE="${BACKUP_FILE}.sha256"
+if [ -f "$CHECKSUM_FILE" ]; then
     echo "Verifying checksum..."
-    cd "$BACKUP_DIR"
-    if sha256sum -c "$(basename "$checksum")" --quiet; then
-        echo "  OK"
+    cd "$(dirname "$BACKUP_FILE")"
+    if sha256sum -c "$(basename "$CHECKSUM_FILE")" --quiet; then
+        echo "Checksum OK."
     else
-        echo "Error: Checksum mismatch! Aborting."
+        echo "Error: Checksum mismatch! Aborting restore."
         exit 1
     fi
+else
+    echo "Warning: No checksum file found. Skipping verification."
 fi
 
-echo "WARNING: This will replace current Nexterm data. Press Ctrl+C to cancel."
-read -r -p "Continue? [y/N] " confirm
-if [ "$confirm" != "y" ] && [ "$confirm" != "Y" ]; then
-    echo "Aborted."
-    exit 0
-fi
+echo "WARNING: This will replace all Nexterm data with the contents of $BACKUP_FILE"
+echo "Press Ctrl+C to cancel, or wait 5 seconds..."
+sleep 5
 
-echo "Restoring Nexterm data..."
+# Stop the container to avoid data corruption
+echo "Stopping Nexterm container..."
+docker compose -f "$(dirname "$0")/docker-compose.yml" stop nexterm
+
+echo "Restoring data from ${BACKUP_FILE}..."
+
 docker run --rm \
     -v nexterm-data:/data \
-    -v "$BACKUP_DIR":/backup:ro \
-    alpine sh -c "rm -rf /data/* && tar xzf /backup/nexterm-data-${TIMESTAMP}.tar.gz -C /data"
+    -v "$(dirname "$BACKUP_FILE")":/backup \
+    alpine sh -c "rm -rf /data/* /data/.* 2>/dev/null; tar xzf /backup/$(basename "$BACKUP_FILE") -C /data"
 
-echo "Restore complete. Restart Nexterm: docker compose restart nexterm"
+echo "Starting Nexterm container..."
+docker compose -f "$(dirname "$0")/docker-compose.yml" start nexterm
+
+echo "Done. Verify the restore by checking http://<host>:6989"

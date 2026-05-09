@@ -34,6 +34,9 @@ services:
 
     security_opt:
       - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
 
 volumes:
   nexterm-data:
