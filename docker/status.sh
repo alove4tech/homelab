@@ -5,6 +5,16 @@ set -euo pipefail
 
 SERVICES_DIR="$(cd "$(dirname "$0")" && pwd)/services"
 
+# Bail early if Docker isn't available
+if ! command -v docker &>/dev/null; then
+  echo "Error: docker command not found. Is Docker installed?"
+  exit 1
+fi
+if ! docker info &>/dev/null; then
+  echo "Error: Docker daemon is not running (or current user lacks permissions)."
+  exit 1
+fi
+
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 YELLOW='\033[1;33m'

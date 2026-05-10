@@ -36,13 +36,11 @@ docker compose up -d
 
 ### Multiple Services
 ```bash
-# Start all services in a directory
+# Start all services
 cd docker/services
 for dir in */; do
   echo "Deploying $dir"
-  cd "$dir"
-  docker compose up -d
-  cd ..
+  (cd "$dir" && docker compose up -d)
 done
 ```
 
@@ -58,10 +56,7 @@ docker compose up -d
 cd docker/services
 for dir in */; do
   echo "Updating $dir"
-  cd "$dir"
-  docker compose pull
-  docker compose up -d
-  cd ..
+  (cd "$dir" && docker compose pull && docker compose up -d)
 done
 ```
 

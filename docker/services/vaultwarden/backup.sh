@@ -15,6 +15,18 @@ BACKUP_FILE="vaultwarden-backup-${TIMESTAMP}.tar.gz"
 
 mkdir -p "$BACKUP_DIR"
 
+# Stop the container for a consistent snapshot — Vaultwarden's SQLite DB can
+# produce a corrupt backup if written to mid-copy.
+echo "Stopping Vaultwarden container for consistent backup..."
+docker compose -f "$SCRIPT_DIR/docker-compose.yml" stop vaultwarden
+
+# Ensure the container gets restarted even if the backup fails
+cleanup() {
+  echo "Starting Vaultwarden container..."
+  docker compose -f "$SCRIPT_DIR/docker-compose.yml" start vaultwarden
+}
+trap cleanup EXIT
+
 echo "Backing up Vaultwarden data to ${BACKUP_DIR}/${BACKUP_FILE}..."
 
 docker run --rm \
