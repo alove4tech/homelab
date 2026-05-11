@@ -36,12 +36,17 @@ free -h | grep Mem | awk '{printf "  %s used of %s total (%s available)\n", $3, 
 echo ""
 echo -e "${YELLOW}Services:${NC}"
 
+running=0
+stopped=0
+
 for dir in "$SERVICES_DIR"/*/; do
     name="$(basename "$dir")"
     if [ -f "$dir/docker-compose.yml" ]; then
-        # Check if the container is running
-        if docker compose -f "$dir/docker-compose.yml" ps --status running -q 2>/dev/null | grep -q .; then
-            health=$(docker inspect --format='{{.State.Health.Status}}' "$name" 2>/dev/null || echo "unknown")
+        # Get the first running container ID from this compose project
+        container_id=$(docker compose -f "$dir/docker-compose.yml" ps --status running -q 2>/dev/null | head -1)
+        if [ -n "$container_id" ]; then
+            running=$((running + 1))
+            health=$(docker inspect --format='{{.State.Health.Status}}' "$container_id" 2>/dev/null || echo "unknown")
             case "$health" in
                 healthy) status="${GREEN}healthy${NC}" ;;
                 unhealthy) status="${RED}unhealthy${NC}" ;;
@@ -49,6 +54,7 @@ for dir in "$SERVICES_DIR"/*/; do
                 *) status="${GREEN}running${NC}" ;;
             esac
         else
+            stopped=$((stopped + 1))
             status="${RED}stopped${NC}"
         fi
         # Extract first published port from docker-compose.yml (portable grep)
@@ -58,4 +64,5 @@ for dir in "$SERVICES_DIR"/*/; do
 done
 
 echo ""
-echo -e "${DIM}Run 'docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}' for full details${NC}"
+echo -e "${DIM}${running} running, ${stopped} stopped${NC}"
+echo -e "${DIM}Run 'docker ps --format \"table {{.Names}}\\t{{.Status}}\\t{{.Ports}}\"' for full details${NC}"

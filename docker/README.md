@@ -40,7 +40,7 @@ docker compose up -d
 cd docker/services
 for dir in */; do
   echo "Deploying $dir"
-  (cd "$dir" && docker compose up -d)
+  (cd "$dir" && docker compose up -d) || echo "⚠ $dir failed to deploy"
 done
 ```
 
@@ -56,7 +56,7 @@ docker compose up -d
 cd docker/services
 for dir in */; do
   echo "Updating $dir"
-  (cd "$dir" && docker compose pull && docker compose up -d)
+  (cd "$dir" && docker compose pull && docker compose up -d) || echo "⚠ $dir failed to update"
 done
 ```
 
