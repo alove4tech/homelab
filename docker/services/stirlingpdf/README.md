@@ -23,6 +23,10 @@ By default the app runs without authentication. To enable login:
 3. Create a `.env` file with your settings
 4. Restart the container
 
+| Variable | Default | Purpose |
+|---|---:|---|
+| `STIRLINGPDF_PORT` | `8480` | Host port mapped to the container web UI |
+
 ## Ports
 
 | Port | Purpose |
