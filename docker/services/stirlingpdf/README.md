@@ -16,16 +16,23 @@ The `stirlingtools/stirling-pdf:latest` image publishes manifests for both **amd
 
 ## Configuration
 
-By default the app runs without authentication. To enable login:
+Create a `.env` file from the example:
 
-1. Set `DOCKER_ENABLE_SECURITY=true` in the environment block
-2. Uncomment the `env_file` line
-3. Create a `.env` file with your settings
-4. Restart the container
+```bash
+cp .env.example .env
+```
+
+By default the app runs without authentication (`DOCKER_ENABLE_SECURITY=false`). To enable login:
+
+1. Edit `.env` and set `DOCKER_ENABLE_SECURITY=true` and `SECURITY_ENABLE_LOGIN=true`
+2. Uncomment and set `SECURITY_INITIAL_LOGIN_USERNAME` and `SECURITY_INITIAL_LOGIN_PASSWORD`
+3. Restart the container with `docker compose up -d`
 
 | Variable | Default | Purpose |
 |---|---:|---|
 | `STIRLINGPDF_PORT` | `8480` | Host port mapped to the container web UI |
+| `DOCKER_ENABLE_SECURITY` | `false` | Enable login protection |
+| `SECURITY_ENABLE_LOGIN` | `false` | Enable the login page |
 
 ## Ports
 

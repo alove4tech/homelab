@@ -33,11 +33,16 @@ df -h / | tail -1 | awk '{printf "  / %s used of %s (%s available)\n", $3, $2, $
 echo -e "${DIM}Memory:${NC}"
 free -h | grep Mem | awk '{printf "  %s used of %s total (%s available)\n", $3, $2, $7}'
 
+# Docker disk usage
+echo -e "${DIM}Docker disk usage:${NC}"
+docker system df --format '{{.Type}}: {{.Size}}' 2>/dev/null | sed 's/^/  /' || echo "  (unable to query)"
+
 echo ""
 echo -e "${YELLOW}Services:${NC}"
 
 running=0
 stopped=0
+unhealthy=0
 
 for dir in "$SERVICES_DIR"/*/; do
     name="$(basename "$dir")"
@@ -49,7 +54,7 @@ for dir in "$SERVICES_DIR"/*/; do
             health=$(docker inspect --format='{{.State.Health.Status}}' "$container_id" 2>/dev/null || echo "unknown")
             case "$health" in
                 healthy) status="${GREEN}healthy${NC}" ;;
-                unhealthy) status="${RED}unhealthy${NC}" ;;
+                unhealthy) status="${RED}unhealthy${NC}"; unhealthy=$((unhealthy + 1)) ;;
                 starting) status="${YELLOW}starting${NC}" ;;
                 *) status="${GREEN}running${NC}" ;;
             esac
@@ -65,4 +70,7 @@ done
 
 echo ""
 echo -e "${DIM}${running} running, ${stopped} stopped${NC}"
+if [ "$unhealthy" -gt 0 ]; then
+    echo -e "${RED}${unhealthy} unhealthy — check logs with: docker compose -f docker/services/<name>/docker-compose.yml logs${NC}"
+fi
 echo -e "${DIM}Run 'docker ps --format \"table {{.Names}}\\t{{.Status}}\\t{{.Ports}}\"' for full details${NC}"
