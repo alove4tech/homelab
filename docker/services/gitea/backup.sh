@@ -55,4 +55,4 @@ fi
 
 echo "Done. Backup size: $(du -h "${BACKUP_DIR}/${BACKUP_FILE}" | cut -f1)"
 echo "File: ${BACKUP_DIR}/${BACKUP_FILE}"
-echo "Checksum: ${BACKUP_FILE}.sha256"
+echo "Checksum: ${BACKUP_DIR}/${BACKUP_FILE}.sha256"

@@ -16,8 +16,8 @@ services:
     env_file:
       - .env
     environment:
-      - SYSTEM_MAXFILESIZE=100
-      - UI_APPNAME=Stirling PDF
+      - SYSTEM_MAXFILESIZE=${STIRLINGPDF_MAX_FILE_SIZE:-100}
+      - UI_APPNAME=${STIRLINGPDF_APP_NAME:-Stirling PDF}
 
     volumes:
       - stirlingpdf-data:/usr/share/tessdata
