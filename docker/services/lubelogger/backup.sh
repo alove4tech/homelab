@@ -5,6 +5,7 @@
 
 set -euo pipefail
 
+KEEP_COUNT=5
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 BACKUP_DIR="${1:-$SCRIPT_DIR/backups}"
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
@@ -48,8 +49,7 @@ for f in lubelogger-data-${TIMESTAMP}.tar.gz lubelogger-keys-${TIMESTAMP}.tar.gz
     sha256sum "$f" > "${f}.sha256"
 done
 
-# Prune old backups (keep the newest 5 of each)
-KEEP_COUNT=5
+# Prune old backups (keep the newest $KEEP_COUNT of each)
 for prefix in lubelogger-data lubelogger-keys; do
     pruned=$(ls -1t ${prefix}-*.tar.gz 2>/dev/null | tail -n +"$((KEEP_COUNT + 1))")
     if [ -n "$pruned" ]; then

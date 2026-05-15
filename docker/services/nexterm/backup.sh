@@ -5,6 +5,7 @@
 
 set -euo pipefail
 
+KEEP_COUNT=5
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 BACKUP_DIR="${1:-$SCRIPT_DIR/backups}"
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
@@ -40,8 +41,7 @@ fi
 cd "$BACKUP_DIR"
 sha256sum "$BACKUP_FILE" > "${BACKUP_FILE}.sha256"
 
-# Prune old backups (keep the newest 5)
-KEEP_COUNT=5
+# Prune old backups (keep the newest $KEEP_COUNT)
 pruned=$(ls -1t nexterm-data-*.tar.gz 2>/dev/null | tail -n +"$((KEEP_COUNT + 1))")
 if [ -n "$pruned" ]; then
     echo "Pruning old backups (keeping last ${KEEP_COUNT})..."
