@@ -20,7 +20,7 @@ services:
       - vaultwarden-data:/data
 
     ports:
-      - "80:80"      # HTTP (use reverse proxy with SSL in production)
+      - "${VAULTWARDEN_PORT:-80}:80"      # HTTP (use reverse proxy with SSL in production)
       # NOTE: WebSocket is built into the main server since Vaultwarden 1.29+.
       # Uncomment below only if running an older version that needs a separate port.
       # - "3012:3012"  # WebSocket (legacy)

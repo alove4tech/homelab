@@ -19,6 +19,7 @@ nano .env
 
 Set these:
 - `DOMAIN` — your public domain
+- `VAULTWARDEN_PORT` — host port to publish (defaults to `80`)
 - `ADMIN_TOKEN` — the token from step 1
 - `SIGNUPS_ALLOWED` — `true` for initial setup, then flip to `false`
 
@@ -30,7 +31,7 @@ docker compose up -d
 
 ### 4. Create your account
 
-Visit your domain, make an account, then set `SIGNUPS_ALLOWED: 'false'` and restart.
+Visit your domain, make an account, then set `SIGNUPS_ALLOWED=false` and restart.
 
 ## Ports
 

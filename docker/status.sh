@@ -47,11 +47,14 @@ unhealthy=0
 for dir in "$SERVICES_DIR"/*/; do
     name="$(basename "$dir")"
     if [ -f "$dir/docker-compose.yml" ]; then
-        # Get the first running container ID from this compose project
-        container_id=$(docker compose -f "$dir/docker-compose.yml" ps --status running -q 2>/dev/null | head -1)
+        # Run compose from the service directory so service-specific .env files
+        # are discovered correctly. Ignore compose errors here: a missing .env
+        # or undeployed stack should show as stopped rather than aborting the
+        # whole dashboard.
+        container_id=$( (cd "$dir" && docker compose ps --status running -q 2>/dev/null | head -1) || true )
         if [ -n "$container_id" ]; then
             running=$((running + 1))
-            health=$(docker inspect --format='{{.State.Health.Status}}' "$container_id" 2>/dev/null || echo "unknown")
+            health=$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' "$container_id" 2>/dev/null || echo "unknown")
             case "$health" in
                 healthy) status="${GREEN}healthy${NC}" ;;
                 unhealthy) status="${RED}unhealthy${NC}"; unhealthy=$((unhealthy + 1)) ;;
@@ -62,8 +65,25 @@ for dir in "$SERVICES_DIR"/*/; do
             stopped=$((stopped + 1))
             status="${RED}stopped${NC}"
         fi
-        # Extract first published port from docker-compose.yml (portable grep)
-        port=$(grep -E '^\s*- ["'"'"']?[0-9]+' "$dir/docker-compose.yml" 2>/dev/null | head -1 | grep -oE '[0-9]+' | head -1 || echo "—")
+        # Extract the first published host port without invoking compose, which
+        # may require secrets that are intentionally absent from a fresh clone.
+        port=$(python3 - "$dir/docker-compose.yml" <<'PY'
+import re
+import sys
+from pathlib import Path
+
+for line in Path(sys.argv[1]).read_text().splitlines():
+    match = re.match(r'\s*-\s*["\']?(?:\$\{([A-Z0-9_]+):-([0-9]+)\}|([0-9]+)):', line)
+    if match:
+        if match.group(1):
+            print(f"{match.group(1)} (default {match.group(2)})")
+        else:
+            print(match.group(3))
+        break
+else:
+    print("—")
+PY
+)
         echo -e "  $name: $status ${DIM}(port $port)${NC}"
     fi
 done
