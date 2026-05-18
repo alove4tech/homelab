@@ -5,6 +5,13 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_NAME="${COMPOSE_PROJECT_NAME:-$(basename "$SCRIPT_DIR")}"
+
+volume_name() {
+    printf '%s_%s' "$PROJECT_NAME" "$1"
+}
+
 if [ $# -lt 2 ]; then
     echo "Usage: $0 <data_backup.tar.gz> <storage_backup.tar.gz>"
     exit 1
@@ -46,21 +53,21 @@ sleep 5
 
 # Stop the container to avoid data corruption
 echo "Stopping Linkstack container..."
-docker compose -f "$(dirname "$0")/docker-compose.yml" stop linkstack
+docker compose -f "$SCRIPT_DIR/docker-compose.yml" stop linkstack
 
 echo "Restoring Linkstack data..."
 docker run --rm \
-    -v linkstack-data:/data \
+    -v "$(volume_name linkstack-data)":/data \
     -v "$(dirname "$DATA_BACKUP")":/backup \
     alpine sh -c "rm -rf /data/* /data/.* 2>/dev/null; tar xzf /backup/$(basename "$DATA_BACKUP") -C /data"
 
 echo "Restoring Linkstack storage..."
 docker run --rm \
-    -v linkstack-storage:/data \
+    -v "$(volume_name linkstack-storage)":/data \
     -v "$(dirname "$STORAGE_BACKUP")":/backup \
     alpine sh -c "rm -rf /data/* /data/.* 2>/dev/null; tar xzf /backup/$(basename "$STORAGE_BACKUP") -C /data"
 
 echo "Starting Linkstack container..."
-docker compose -f "$(dirname "$0")/docker-compose.yml" start linkstack
+docker compose -f "$SCRIPT_DIR/docker-compose.yml" start linkstack
 
 echo "Done. Verify the restore by checking http://<host>:8082"

@@ -5,6 +5,13 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_NAME="${COMPOSE_PROJECT_NAME:-$(basename "$SCRIPT_DIR")}"
+
+volume_name() {
+  printf '%s_%s' "$PROJECT_NAME" "$1"
+}
+
 if [ $# -lt 2 ]; then
   echo "Usage: $0 <data_backup.tar.gz> <config_backup.tar.gz>"
   exit 1
@@ -45,21 +52,21 @@ echo "Press Ctrl+C to cancel, or wait 5 seconds..."
 sleep 5
 
 echo "Stopping Stirling PDF container..."
-docker compose -f "$(dirname "$0")/docker-compose.yml" stop stirlingpdf
+docker compose -f "$SCRIPT_DIR/docker-compose.yml" stop stirlingpdf
 
 echo "Restoring data..."
 docker run --rm \
-  -v stirlingpdf-data:/data \
+  -v "$(volume_name stirlingpdf-data)":/data \
   -v "$(dirname "$DATA_BACKUP")":/backup \
   alpine sh -c "rm -rf /data/* /data/.* 2>/dev/null; tar xzf /backup/$(basename "$DATA_BACKUP") -C /data"
 
 echo "Restoring config..."
 docker run --rm \
-  -v stirlingpdf-config:/config \
+  -v "$(volume_name stirlingpdf-config)":/config \
   -v "$(dirname "$CONFIG_BACKUP")":/backup \
   alpine sh -c "rm -rf /config/* /config/.* 2>/dev/null; tar xzf /backup/$(basename "$CONFIG_BACKUP") -C /config"
 
 echo "Starting Stirling PDF container..."
-docker compose -f "$(dirname "$0")/docker-compose.yml" start stirlingpdf
+docker compose -f "$SCRIPT_DIR/docker-compose.yml" start stirlingpdf
 
 echo "Done. Verify the restore by checking http://<host>:8480"

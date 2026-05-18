@@ -7,8 +7,13 @@ set -euo pipefail
 
 KEEP_COUNT=5
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_NAME="${COMPOSE_PROJECT_NAME:-$(basename "$SCRIPT_DIR")}"
 BACKUP_DIR="${1:-$SCRIPT_DIR/backups}"
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+
+volume_name() {
+    printf '%s_%s' "$PROJECT_NAME" "$1"
+}
 
 mkdir -p "$BACKUP_DIR"
 
@@ -26,13 +31,13 @@ trap cleanup EXIT
 
 echo "Backing up Lubelogger data..."
 docker run --rm \
-    -v lubelogger-data:/data:ro \
+    -v "$(volume_name lubelogger-data)":/data:ro \
     -v "$BACKUP_DIR":/backup \
     alpine tar czf "/backup/lubelogger-data-${TIMESTAMP}.tar.gz" -C /data .
 
 echo "Backing up Lubelogger keys..."
 docker run --rm \
-    -v lubelogger-keys:/data:ro \
+    -v "$(volume_name lubelogger-keys)":/data:ro \
     -v "$BACKUP_DIR":/backup \
     alpine tar czf "/backup/lubelogger-keys-${TIMESTAMP}.tar.gz" -C /data .
 

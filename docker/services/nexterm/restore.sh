@@ -5,6 +5,13 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_NAME="${COMPOSE_PROJECT_NAME:-$(basename "$SCRIPT_DIR")}"
+
+volume_name() {
+    printf '%s_%s' "$PROJECT_NAME" "$1"
+}
+
 if [ $# -lt 1 ]; then
     echo "Usage: $0 <backup_file.tar.gz>"
     exit 1
@@ -38,16 +45,16 @@ sleep 5
 
 # Stop the container to avoid data corruption
 echo "Stopping Nexterm container..."
-docker compose -f "$(dirname "$0")/docker-compose.yml" stop nexterm
+docker compose -f "$SCRIPT_DIR/docker-compose.yml" stop nexterm
 
 echo "Restoring data from ${BACKUP_FILE}..."
 
 docker run --rm \
-    -v nexterm-data:/data \
+    -v "$(volume_name nexterm-data)":/data \
     -v "$(dirname "$BACKUP_FILE")":/backup \
     alpine sh -c "rm -rf /data/* /data/.* 2>/dev/null; tar xzf /backup/$(basename "$BACKUP_FILE") -C /data"
 
 echo "Starting Nexterm container..."
-docker compose -f "$(dirname "$0")/docker-compose.yml" start nexterm
+docker compose -f "$SCRIPT_DIR/docker-compose.yml" start nexterm
 
 echo "Done. Verify the restore by checking http://<host>:6989"

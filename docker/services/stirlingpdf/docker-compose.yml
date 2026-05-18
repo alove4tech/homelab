@@ -14,7 +14,8 @@ services:
           memory: 256M
 
     env_file:
-      - .env
+      - path: .env
+        required: false
     environment:
       - SYSTEM_MAXFILESIZE=${STIRLINGPDF_MAX_FILE_SIZE:-100}
       - UI_APPNAME=${STIRLINGPDF_APP_NAME:-Stirling PDF}

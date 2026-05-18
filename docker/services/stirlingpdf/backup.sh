@@ -9,8 +9,13 @@ set -euo pipefail
 
 KEEP_COUNT=5
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_NAME="${COMPOSE_PROJECT_NAME:-$(basename "$SCRIPT_DIR")}"
 BACKUP_DIR="${1:-$SCRIPT_DIR/backups}"
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
+
+volume_name() {
+  printf '%s_%s' "$PROJECT_NAME" "$1"
+}
 
 mkdir -p "$BACKUP_DIR"
 
@@ -29,8 +34,8 @@ trap cleanup EXIT
 echo "Backing up Stirling PDF data and config..."
 
 docker run --rm \
-  -v stirlingpdf-data:/data:ro \
-  -v stirlingpdf-config:/config:ro \
+  -v "$(volume_name stirlingpdf-data)":/data:ro \
+  -v "$(volume_name stirlingpdf-config)":/config:ro \
   -v "${BACKUP_DIR}":/backup \
   alpine sh -c "tar czf /backup/stirlingpdf-data-${TIMESTAMP}.tar.gz -C /data . && tar czf /backup/stirlingpdf-config-${TIMESTAMP}.tar.gz -C /config ."
 

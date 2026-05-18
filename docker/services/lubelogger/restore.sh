@@ -5,6 +5,13 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_NAME="${COMPOSE_PROJECT_NAME:-$(basename "$SCRIPT_DIR")}"
+
+volume_name() {
+    printf '%s_%s' "$PROJECT_NAME" "$1"
+}
+
 if [ $# -lt 2 ]; then
     echo "Usage: $0 <data_backup.tar.gz> <keys_backup.tar.gz>"
     exit 1
@@ -46,21 +53,21 @@ sleep 5
 
 # Stop the container to avoid data corruption
 echo "Stopping Lubelogger container..."
-docker compose -f "$(dirname "$0")/docker-compose.yml" stop lubelogger
+docker compose -f "$SCRIPT_DIR/docker-compose.yml" stop lubelogger
 
 echo "Restoring Lubelogger data..."
 docker run --rm \
-    -v lubelogger-data:/data \
+    -v "$(volume_name lubelogger-data)":/data \
     -v "$(dirname "$DATA_BACKUP")":/backup \
     alpine sh -c "rm -rf /data/* /data/.* 2>/dev/null; tar xzf /backup/$(basename "$DATA_BACKUP") -C /data"
 
 echo "Restoring Lubelogger keys..."
 docker run --rm \
-    -v lubelogger-keys:/data \
+    -v "$(volume_name lubelogger-keys)":/data \
     -v "$(dirname "$KEYS_BACKUP")":/backup \
     alpine sh -c "rm -rf /data/* /data/.* 2>/dev/null; tar xzf /backup/$(basename "$KEYS_BACKUP") -C /data"
 
 echo "Starting Lubelogger container..."
-docker compose -f "$(dirname "$0")/docker-compose.yml" start lubelogger
+docker compose -f "$SCRIPT_DIR/docker-compose.yml" start lubelogger
 
 echo "Done. Verify the restore by checking http://<host>:8083"

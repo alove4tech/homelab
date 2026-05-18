@@ -14,7 +14,8 @@ services:
           memory: 256M
 
     env_file:
-      - .env
+      - path: .env
+        required: false
 
     volumes:
       - vaultwarden-data:/data
